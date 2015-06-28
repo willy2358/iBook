@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="iBooks.Controls.BookItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <DataTemplate x:Key="BlankBook">
+            <Grid x:Name="container">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="64"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Rectangle Grid.Row="0" Grid.RowSpan="3" Stroke="Blue" StrokeDashArray="2,2,5,2" StrokeThickness="2" Fill="Transparent" MouseLeftButtonDown="OnClickItem"></Rectangle>
+                <Image Grid.Row="1" Source="..\res\addbook.png" MouseLeftButtonDown="OnClickItem"></Image>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="RealBook">
+            <Image Grid.Row="1" MouseLeftButtonDown="OnClickItem"></Image>
+        </DataTemplate>
+        
+    </UserControl.Resources>
+    
+    <Grid x:Name="container">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="32"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Ellipse x:Name="RemoveBook" Stroke="#FF000000" HorizontalAlignment="Right" Grid.Row="0" VerticalAlignment="Center" Visibility="Hidden" Margin="0" Width="32" Height="32" StrokeThickness="0" MouseLeftButtonDown="OnDelBook">
+            <Ellipse.Fill>
+                <ImageBrush ImageSource="..\res\delbook.png" />
+            </Ellipse.Fill>
+        </Ellipse>
+        <Rectangle x:Name="MyBorder" Grid.Row="0" Grid.RowSpan="4" Stroke="Blue" StrokeDashArray="2,2,5,2" StrokeThickness="2" Fill="Transparent" MouseLeftButtonDown="OnClickItem"></Rectangle>
+        <Image x:Name="MyCover" Grid.Row="2" Source="{Binding BookCover}" MouseLeftButtonDown="OnClickItem">
+            <Image.LayoutTransform>
+                <ScaleTransform></ScaleTransform>
+            </Image.LayoutTransform>
+            <Image.Triggers>
+                <EventTrigger RoutedEvent="Image.MouseEnter" >
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleX" To="1.2" Duration="0:0:0.5"></DoubleAnimation>
+                            <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleY" To="1.5" Duration="0:0:0.5"></DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Image.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleX" To="1" Duration="0:0:0.5"></DoubleAnimation>
+                            <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleY" To="1" Duration="0:0:0.5"></DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+            </Image.Triggers>
+        </Image>
+    </Grid>
+
+</UserControl>

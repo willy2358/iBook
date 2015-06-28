@@ -1,0 +1,139 @@
+﻿<UserControl x:Class="iBooks.Views.ShelfFrameView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ViewModels="clr-namespace:iBooks.ViewModels"       
+        xmlns:prism="http://www.codeplex.com/prism"
+        xmlns:MyCtrls="clr-namespace:iBooks.Controls"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:views="clr-namespace:iBooks.Views"
+        xmlns:style="clr-namespace:iBooks.Style"
+        mc:Ignorable="d"
+        VerticalAlignment="Stretch"
+        HorizontalAlignment="Stretch" 
+       d:DesignWidth="600" d:DesignHeight="400"
+        >
+ 
+    <Control.DataContext>
+        <ViewModels:ShelfFrameViewModel></ViewModels:ShelfFrameViewModel>
+    </Control.DataContext>
+    <UserControl.Resources>
+        <Style x:Key="myListboxStyle">
+            <Style.Resources>
+                <!-- Background of selected item when focussed -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                <!-- Background of selected item when not focussed -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+            </Style.Resources>
+        </Style>
+
+        <!--<Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource ResourceKey={x:Type ListBoxItem}}">
+            <EventSetter Event="MouseDown" Handler="ListBoxMouseDouleClick">
+            </EventSetter>
+        </Style>-->
+
+    </UserControl.Resources>
+
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding AddBookRequest, Mode=OneWay}">
+            <prism:PopupWindowAction IsModal="True">
+                <prism:PopupWindowAction.WindowContent>
+                    <views:AddBookView HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </prism:PopupWindowAction.WindowContent>
+            </prism:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+    
+    <Grid x:Name="Shelf">
+ 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="20"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" >
+            <Grid.Background>
+                <ImageBrush ImageSource="..\res\shelfbk.jpg"></ImageBrush>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="32"></RowDefinition>
+            </Grid.RowDefinitions>
+            
+        
+        <ListBox BorderThickness="0" Background="Transparent"  Grid.Row="0" ItemsSource="{Binding Path=BookRows, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                 ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Stretch" x:Name="LeftPart" 
+                 Style="{StaticResource myListboxStyle}" >
+            <ListBox.ItemContainerStyle>
+                <Style>
+                    <Setter Property="Control.Padding" Value="0"></Setter>
+                    <Style.Triggers>
+                        <Trigger Property="ListBoxItem.IsSelected" Value="True">
+                            <Setter Property="ListBoxItem.Background" Value="Transparent"></Setter>
+                        </Trigger>
+
+                        <Trigger Property="Selector.IsSelected" Value="True">
+                            <Setter Property="ListBoxItem.Background" Value="Transparent"></Setter>
+                            <Setter Property="ListBoxItem.Foreground" Value="Transparent"></Setter>
+                        </Trigger>
+
+                        <Trigger Property="Selector.IsSelectionActive" Value="True">
+                            <Setter Property="ListBoxItem.Background" Value="Transparent"></Setter>
+                            <Setter Property="ListBoxItem.Foreground" Value="Transparent"></Setter>
+                        </Trigger>
+                        </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+
+                        <MyCtrls:ShelfRowUnit Height="220" Width="{Binding ElementName=LeftPart, Path=ActualWidth}" BooksRow="{Binding}" BookItemClicked="OnBookItemClicked" BookItemRemoved="OnBookItemRemoved"  x:Name="MyBooksRow"></MyCtrls:ShelfRowUnit>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Ellipse Grid.Row="1" Stroke="#FF000000" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0" Width="28" Height="28" StrokeThickness="0"  MouseLeftButtonDown="OnRemovingBooks">
+            <Ellipse.Fill>
+                <ImageBrush ImageSource="..\res\trash.png" />
+            </Ellipse.Fill>
+        </Ellipse>
+        </Grid>
+         <Border Grid.Column="1" >
+            <Border.Background>
+                <ImageBrush ImageSource="..\res\col.png"></ImageBrush>
+            </Border.Background>
+        </Border>            
+        <Grid Grid.Column="2">
+            <Grid.Background>
+                <ImageBrush ImageSource="..\res\shelfbk.jpg"></ImageBrush>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="15"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="5" x:Name="CoverViewHost">
+                <!--<views:BookCoverView x:Name="CoverView" MaxingView="OnMaxingCoverView"/>-->
+                <views:BookContentView x:Name="CoverView" MaxingView="OnMaxingCoverView"></views:BookContentView>
+            </Grid>
+
+            <Border Grid.Row="1">
+                <Border.Background>
+                    <ImageBrush ImageSource="..\res\row.png"></ImageBrush>
+                </Border.Background>
+            </Border>
+            <Grid Grid.Row="2" Margin="2" x:Name="MediaViewHost">
+                <views:BookMediaView x:Name="MediaView" MaxingView="OnMaxingMediaView"/>
+            </Grid>
+            
+            <!--<Grid Grid.Row="3">
+                <views:BookContentView></views:BookContentView>
+            </Grid>-->
+
+            
+        </Grid>
+    </Grid>
+</UserControl>
